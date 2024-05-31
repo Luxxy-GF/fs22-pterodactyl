@@ -33,7 +33,6 @@ ENV             DISPLAY=:0
 ENV             DISPLAY_WIDTH=1024
 ENV             DISPLAY_HEIGHT=768
 ENV             DISPLAY_DEPTH=16
-ENV             DISPLAY_USER=container
 ENV             AUTO_UPDATE=1
 ENV             XVFB=1
 

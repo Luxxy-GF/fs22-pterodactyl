@@ -15,8 +15,6 @@ RUN             wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-bui
 RUN             apt update
 RUN             apt install --install-recommends winehq-stable cabextract wine-binfmt -y
 
-RUN useradd -m -d /home/container container
-
 USER        container
 ENV         USER=container HOME=/home/container
 WORKDIR     /home/container

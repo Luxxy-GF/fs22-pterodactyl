@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 # Wine image based on Wine stable with nginx webserver for Farming Simulator 22
 # -----------------------------------------------------------------------------
-FROM            debian:bookworm-slim
+FROM            ghcr.io/parkervcp/yolks:debian
 
 ## install required packages
 RUN             dpkg --add-architecture i386 \

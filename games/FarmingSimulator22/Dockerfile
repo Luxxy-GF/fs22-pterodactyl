@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# Wine image based on Wine stable with nginx webserver for Farming Simulator 22 
+# Wine image based on Wine stable with nginx webserver for Farming Simulator 22
 # -----------------------------------------------------------------------------
 FROM            debian:bookworm-slim
 

@@ -15,6 +15,13 @@ RUN             wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-bui
 RUN             apt update
 RUN             apt install --install-recommends winehq-stable cabextract wine-binfmt -y
 
+RUN useradd -m -d /home/container container
+
+USER        container
+ENV         USER=container HOME=/home/container
+WORKDIR     /home/container
+
+
 # Set up Winetricks
 RUN	            wget -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
                 && chmod +x /usr/sbin/winetricks
@@ -26,6 +33,7 @@ ENV             DISPLAY=:0
 ENV             DISPLAY_WIDTH=1024
 ENV             DISPLAY_HEIGHT=768
 ENV             DISPLAY_DEPTH=16
+ENV             DISPLAY_USER=container
 ENV             AUTO_UPDATE=1
 ENV             XVFB=1
 

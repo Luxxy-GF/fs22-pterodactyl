@@ -29,5 +29,5 @@ ENV             DISPLAY_DEPTH=16
 ENV             AUTO_UPDATE=1
 ENV             XVFB=1
 
-COPY            entrypoint.sh /entrypoint.sh
+COPY            ./games/FarmingSimulator22/entrypoint.sh /entrypoint.sh
 CMD             [ "/bin/bash", "/entrypoint.sh" ]

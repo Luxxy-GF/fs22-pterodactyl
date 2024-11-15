@@ -41,3 +41,13 @@ jobs:
           push: true
           tags: |
             ghcr.io/luxxy-gf/fs22-pterodactyl:latest
+      -
+        name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./games/FarmingSimulator25/Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ghcr.io/luxxy-gf/fs25-pterodactyl:latest

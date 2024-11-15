@@ -25,7 +25,7 @@
                     && chmod +x /usr/sbin/winetricks
     
     ENV             HOME=/home/container
-    ENV             WINEPREFIX=/home/container/.wine
+    ENV             WINEPREFIX=/home/container/.fs25
     ENV             WINEDLLOVERRIDES="mscoree,mshtml="
     ENV             DISPLAY=:0
     ENV             DISPLAY_WIDTH=1024

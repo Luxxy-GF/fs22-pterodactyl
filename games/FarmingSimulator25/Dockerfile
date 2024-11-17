@@ -50,9 +50,9 @@ ENV USER=container GROUP=container HOME=/home/container
 # Perform permission changes as root
 USER root
 RUN chmod 640 /etc/ssl/private/ssl-cert-snakeoil.key \
-    && chmod 640 /etc/ssl/certs/ssl-cert-snakeoil.pem \
-    && chgrp container /etc/ssl/private/ssl-cert-snakeoil.key \
-    && chgrp container /etc/ssl/certs/ssl-cert-snakeoil.pem
+    && chmod 640 /etc/ssl/certs/ssl-cert-snakeoil.pem
+RUN chown -R container:container /etc/ssl/private/ssl-cert-snakeoil.key \
+    && chown -R container:container /etc/ssl/certs/ssl-cert-snakeoil.pem
 
 # Switch to container user
 USER container

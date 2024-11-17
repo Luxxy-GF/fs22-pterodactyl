@@ -11,7 +11,7 @@ on:
       - games/**
 jobs:
   qemu:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       -
         name: Checkout

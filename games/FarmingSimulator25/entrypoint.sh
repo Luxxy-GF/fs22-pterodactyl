@@ -21,6 +21,7 @@ export WINEDEBUG=-all
 # Ensure Wine prefix directory exists
 echo "Creating Wine prefix directory..."
 mkdir -p "$WINEPREFIX"
+mkdir -p "/home/container/.vnc"
 
 # Set new VNC password if available
 if [ -f /home/container/.vnc/passwd ]; then

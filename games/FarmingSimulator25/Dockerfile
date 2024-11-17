@@ -10,7 +10,7 @@ RUN useradd -m -d /home/container -s /bin/bash container
 # Install required packages
 RUN dpkg --add-architecture i386 \
     && apt update -y \
-    && apt install -y --no-install-recommends gnupg2 iproute2 wget numactl tzdata software-properties-common libntlm0 winbind xvfb xauth python3 libncurses5:i386 libncurses6:i386 libsdl2-2.0-0 libsdl2-2.0-0:i386 tightvncserver x11-xserver-utils xfonts-base debian-keyring debian-archive-keyring apt-transport-https curl nginx supervisor ssl-cert sudo
+    && apt install -y --no-install-recommends gnupg2 iproute2 wget numactl tzdata software-properties-common libntlm0 winbind xvfb xauth python3 libncurses5:i386 libncurses6:i386 libsdl2-2.0-0 libsdl2-2.0-0:i386 tightvncserver x11-xserver-utils xfonts-base debian-keyring debian-archive-keyring apt-transport-https curl nginx
 
 # Install Wine staging
 RUN mkdir -pm755 /etc/apt/keyrings \
@@ -33,36 +33,16 @@ RUN apt-get update && apt-get install -y \
     && apt --fix-broken install -y ./kasmvncserver_bookworm_1.3.3_amd64.deb \
     && rm -f kasmvncserver_bookworm_1.3.3_amd64.deb
 
-RUN make-ssl-cert generate-default-snakeoil --force-overwrite
-
 # Set environment variables for Wine and VNC
 ENV WINEPREFIX=/home/container/.wine
 ENV WINEDLLOVERRIDES="mscoree,mshtml="
 ENV DISPLAY=":1"
 
-# Ensure group and user exist
-RUN getent group container || groupadd -g 1000 container \
-    && id -u container || useradd -m -u 1000 -g container container
-
-# Set environment variables
-ENV USER=container GROUP=container HOME=/home/container
-
-# Perform permission changes as root
-USER root
-RUN chmod 640 /etc/ssl/private/ssl-cert-snakeoil.key \
-    && chmod 640 /etc/ssl/certs/ssl-cert-snakeoil.pem
-RUN chown -R container:container /etc/ssl/private/ssl-cert-snakeoil.key \
-    && chown -R container:container /etc/ssl/certs/ssl-cert-snakeoil.pem
-
 # Switch to container user
 USER container
+ENV USER=container HOME=/home/container
 WORKDIR /home/container
 
-
-
-#COPY ./games/FarmingSimulator25/supervisor/kasmvnc.conf /etc/supervisor/conf.d/kasmvnc.conf
-
-# Copy entrypoint script
 COPY ./games/FarmingSimulator25/entrypoint.sh /entrypoint.sh
 
 # Set the entrypoint

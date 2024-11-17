@@ -85,6 +85,29 @@ else
   echo "FS_VERSION is to Farming Simulator 20${FS_VERSION}"
 fi
 
+echo -e "vnc port"
+cat << EOF > /home/container/.vnc/kasmvnc.yaml
+logging:
+  log_writer_name: all
+  log_dest: logfile
+  level: 100
+network:
+  protocol: http
+  interface: 0.0.0.0
+  websocket_port: ${VNC_PORT}
+  use_ipv4: true
+  use_ipv6: true
+  udp:
+    public_ip: auto
+    port: ${VNC_PORT}
+    stun_server: auto
+  ssl:
+    pem_certificate: /home/container/.vnc/server.pem
+    pem_key: /home/container/.vnc/server.key
+    require_ssl: true
+EOF
+
+
 # Handle various progression states
 if [ "${PROGRESSION}" == "INSTALL_SERVER" ]; then
     /usr/bin/vncserver -xstartup /home/container/.vnc/xstartup -geometry 1920x1080 -rfbport "${VNC_PORT}" -desktop x11 -cert /home/container/.vnc/server.pem -key /home/container/.vnc/server.key

@@ -45,7 +45,6 @@ USER container
 ENV USER=container GROUP=container HOME=/home/container
 WORKDIR /home/container
 
-RUN chmod 716 /etc/ssl/private
 RUN chmod 640 /etc/ssl/private/ssl-cert-snakeoil.key
 RUN chmod 640 /etc/ssl/certs/ssl-cert-snakeoil.pem
 RUN chgrp container /etc/ssl/private/ssl-cert-snakeoil.key

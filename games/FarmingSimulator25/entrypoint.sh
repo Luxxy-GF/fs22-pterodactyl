@@ -135,4 +135,4 @@ echo "✓ started Nginx..."
 echo "Starting with command: ${STARTCMD}"
 
 # Execute the startup command
-eval "${STARTCMD}"
+eval "${STARTCMD} > /dev/null 2>&1 &"

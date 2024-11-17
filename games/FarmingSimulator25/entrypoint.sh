@@ -25,6 +25,7 @@ mkdir -p "$WINEPREFIX"
 if [ -f /home/container/.vnc/passwd ]; then
     echo "Setting VNC password..."
     echo "${VNC_PASS}" | vncpasswd -f > /home/container/.vnc/passwd
+    echo "${VNC_PASS}" | vncpasswd > /home/container/.vnc/passwd
 fi
 
 # Kill any old VNC sessions if running
@@ -40,7 +41,10 @@ fi
 
 # Start KasmVNC server
 echo "Starting KasmVNC server..."
+# Automatically choose option [2] to start KasmVNC without a user with write access
 echo "2" | /usr/bin/kasmvncserver --geometry 1920x1080 --port ${VNC_PORT} --password ${VNC_PASS}
+# Ensure the script exists and has proper permissions
+chmod +x /usr/lib/kasmvncserver/select-de.sh
 KASMVNC_PID=$!
 
 # Check if FS_VERSION is not 22 or 25

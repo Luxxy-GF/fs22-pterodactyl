@@ -47,6 +47,14 @@ for trick in $WINETRICKS_RUN; do
     winetricks -q "$trick"
 done
 
+## generate ssl if not in the .vnc folder
+
+if [ ! -f /home/container/.vnc/server.pem ]; then
+    echo "Generating SSL certificate..."
+    openssl req -x509 -nodes -newkey rsa:2048 -keyout /home/container/.vnc/server.pem -out /home/container/.vnc/server.pem -days 365 -subj "/C=US"
+fi
+
+
 # Kill any old VNC sessions if running
 echo "Killing any existing VNC sessions..."
 [ -z "${DISPLAY}" ] || /usr/bin/vncserver -kill "${DISPLAY}"
@@ -69,7 +77,7 @@ fi
 
 # Handle various progression states
 if [ "${PROGRESSION}" == "INSTALL_SERVER" ]; then
-    /usr/bin/vncserver -xstartup /home/container/.vnc/xstartup -geometry 1920x1080 -rfbport "${VNC_PORT}" -desktop x11
+    /usr/bin/vncserver -xstartup /home/container/.vnc/xstartup -geometry 1920x1080 -rfbport "${VNC_PORT}" -desktop x11 -cert /home/container/.vnc/server.pem
      # Check if the directory is writable and the file exists
     if [ "1" == "1" ]; then
         echo "You have write permission to the /fs directory and the file the server files seems to exists."
@@ -80,7 +88,7 @@ if [ "${PROGRESSION}" == "INSTALL_SERVER" ]; then
         STARTCMD="sleep 50"
     fi
 elif [ "${PROGRESSION}" == "INSTALL_DLC" ] && [ ! -z "${DLC_EXE}" ]; then
-    /usr/bin/vncserver -xstartup /home/container/.vnc/xstartup -geometry 1920x1080 -rfbport "${VNC_PORT}" -desktop x11
+    /usr/bin/vncserver -xstartup /home/container/.vnc/xstartup -geometry 1920x1080 -rfbport "${VNC_PORT}" -desktop x11 -cert /home/container/.vnc/server.pem
     STARTCMD="wine /home/container/dlc_install/${DLC_EXE}"
 elif [ "${PROGRESSION}" == "SETUP_VNC" ]; then
     # Set up VNC configuration if it doesn't already exist
@@ -100,19 +108,19 @@ elif [ "${PROGRESSION}" == "SETUP_VNC" ]; then
 elif [ "${PROGRESSION}" == "ACTIVATE" ] && [ -f "/home/container/.vnc/passwd" ]; then
     # Activate VNC and set the start command for the game
     echo "Activating VNC server..."
-    /usr/bin/vncserver -xstartup /home/container/.vnc/xstartup -geometry 1920x1080 -rfbport "${VNC_PORT}" -desktop x11
+    /usr/bin/vncserver -xstartup /home/container/.vnc/xstartup -geometry 1920x1080 -rfbport "${VNC_PORT}" -desktop x11 -cert /home/container/.vnc/server.pem
     STARTCMD="wine /home/container/Farming\ Simulator\ 20${FS_VERSION}/FarmingSimulator20${FS_VERSION}.exe"
 
 elif [ "${PROGRESSION}" == "RUN" ] && [ -f "/home/container/.vnc/passwd" ]; then
     # Prepare the startup command using environment variables
     echo "Preparing startup command..."
-    /usr/bin/vncserver -xstartup /home/container/.vnc/xstartup -geometry 1920x1080 -rfbport "${VNC_PORT}" -desktop x11
+    /usr/bin/vncserver -xstartup /home/container/.vnc/xstartup -geometry 1920x1080 -rfbport "${VNC_PORT}" -desktop x11 -cert /home/container/.vnc/server.pem
     STARTCMD=$(echo "${STARTUP}" | sed -e 's/{{/${/g' -e 's/}}/}/g')
 
 elif [ "${PROGRESSION}" == "UPDATE" ]; then
         # Update the server
         echo "Updating the server..."
-        /usr/bin/vncserver -xstartup /home/container/.vnc/xstartup -geometry 1920x1080 -rfbport "${VNC_PORT}" -desktop x11
+        /usr/bin/vncserver -xstartup /home/container/.vnc/xstartup -geometry 1920x1080 -rfbport "${VNC_PORT}" -desktop x11 -cert /home/container/.vnc/server.pem
         STARTCMD="wine /home/container/Farming\ Simulator\ 20${FS_VERSION}/FarmingSimulator20${FS_VERSION}.exe"
 
         echo -e "Please stop the server and set the PROGRESSION variable to RUN"

@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# https://www.mail-archive.com/tigervnc-devel@lists.sourceforge.net/msg00319.html
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+
+export DISPLAY=:1
+[ -r /home/container/.Xresources ] && xrdb /home/container/.Xresources
+xsetroot -solid grey
+
+# Start Openbox window manager
+openbox &

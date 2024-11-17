@@ -49,6 +49,9 @@ WORKDIR /home/container
 USER root
 RUN mkdir -p /etc/supervisor/conf.d
 RUN chmod 716 /etc/ssl/private
+RUN chmod 716 /etc/ssl/private/ssl-cert-snakeoil.key
+RUN chmod 716 /etc/ssl/certs/ssl-cert-snakeoil.pem
+
 COPY ./games/FarmingSimulator25/supervisor/kasmvnc.conf /etc/supervisor/conf.d/kasmvnc.conf
 
 # Copy entrypoint script

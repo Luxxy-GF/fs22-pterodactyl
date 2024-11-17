@@ -131,8 +131,11 @@ nginx -c /home/container/.nginx/nginx/nginx.conf -p /home/container/.nginx/
 echo "✓ started Nginx..."
 
 
+## Echo the Display
+echo "Display: ${DISPLAY}"
+
 # Echo the final startup command
 echo "Starting with command: ${STARTCMD}"
 
 # Execute the startup command
-eval "${STARTCMD} > /dev/null 2>&1 &"
+eval "${STARTCMD}"

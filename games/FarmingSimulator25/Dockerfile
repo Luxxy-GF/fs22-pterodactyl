@@ -25,15 +25,25 @@ RUN mkdir -pm755 /etc/apt/keyrings \
 RUN wget -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
     && chmod +x /usr/sbin/winetricks
 
-# Install KasmVNC
+# Install dependencies and KasmVNC
 RUN apt-get update && apt-get install -y \
     wget \
     ca-certificates \
+    libgl1 \
+    libxfont2 \
+    libxshmfence1 \
+    libxtst6 \
+    xauth \
+    x11-xkb-utils \
+    libswitch-perl \
+    libyaml-tiny-perl \
+    libhash-merge-simple-perl \
+    liblist-moreutils-perl \
+    libdatetime-timezone-perl \
     && wget https://github.com/kasmtech/KasmVNC/releases/download/v1.3.3/kasmvncserver_bookworm_1.3.3_amd64.deb \
     && dpkg -i kasmvncserver_bookworm_1.3.3_amd64.deb \
     && apt-get install -f -y \
     && rm -f kasmvncserver_bookworm_1.3.3_amd64.deb
-
 
 # Set environment variables for Wine and VNC
 ENV WINEPREFIX=/home/container/.wine

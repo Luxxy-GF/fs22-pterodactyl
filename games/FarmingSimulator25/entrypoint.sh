@@ -176,6 +176,7 @@ echo "✓ started Nginx..."
 
 # Echo the final startup command
 echo "Starting with command: ${STARTCMD}"
-
+xrandr --listmonitors
 # Execute the startup command
+xrandr --output :1 --same-as :0
 eval "${STARTCMD}"

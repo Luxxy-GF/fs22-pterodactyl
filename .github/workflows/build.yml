@@ -8,7 +8,7 @@ on:
     branches:
       - main
     paths:
-      - /**
+      - games/**
 jobs:
   qemu:
     runs-on: ubuntu-latest

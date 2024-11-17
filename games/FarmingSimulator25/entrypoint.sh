@@ -106,6 +106,15 @@ elif [ "${PROGRESSION}" == "RUN" ] && [ -f "/home/container/.vnc/passwd" ]; then
     /usr/bin/vncserver -geometry 1920x1080 -rfbport "${VNC_PORT}" -rfbauth /home/container/.vnc/passwd
     STARTCMD=$(echo "${STARTUP}" | sed -e 's/{{/${/g' -e 's/}}/}/g')
 
+elif [ "${PROGRESSION}" == "UPDATE" ]; then
+        # Update the server
+        echo "Updating the server..."
+        /usr/bin/vncserver -geometry 1920x1080 -rfbport "${VNC_PORT}" -rfbauth /home/container/.vnc/passwd
+        STARTCMD="wine /home/container/Farming\ Simulator\ 20${FS_VERSION}/FarmingSimulator20${FS_VERSION}.exe"
+
+        echo -e "Please stop the server and set the PROGRESSION variable to RUN"
+        sleep 20
+
 else
     # Unrecognized progression state
     echo "Error: The PROGRESSION variable is set to an unknown value."

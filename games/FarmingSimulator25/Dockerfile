@@ -35,5 +35,6 @@ WORKDIR     /home/container
 
 ENV DISPLAY=":1"
 
-ADD entrypoint.sh /entrypoint.sh
+    
+COPY            ./games/FarmingSimulator25/entrypoint.sh /entrypoint.sh
 CMD             [ "/bin/bash", "/entrypoint.sh" ]

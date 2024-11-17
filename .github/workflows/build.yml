@@ -8,7 +8,7 @@ on:
     branches:
       - main
     paths:
-      - games/**
+      - games/**/**
 jobs:
   qemu:
     runs-on: self-hosted

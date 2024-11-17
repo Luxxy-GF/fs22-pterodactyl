@@ -1,39 +1,53 @@
-FROM  debian:bookworm-slim
+# Base image
+FROM debian:bookworm-slim
 
-ENV         DEBIAN_FRONTEND=noninteractive
+# Set environment to noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
+# Create a user for the container
+RUN useradd -m -d /home/container -s /bin/bash container
 
-RUN useradd -m -d /home/container -s /bin/bash container 
-
-## install required packages
-RUN             dpkg --add-architecture i386 \
+# Install required packages
+RUN dpkg --add-architecture i386 \
     && apt update -y \
-    && apt install -y --no-install-recommends gnupg2 iproute2 wget numactl tzdata software-properties-common libntlm0 winbind xvfb xauth python3 libncurses5:i386 libncurses6:i386 libsdl2-2.0-0 libsdl2-2.0-0:i386 tightvncserver x11-xserver-utils xfonts-base debian-keyring debian-archive-keyring apt-transport-https curl nginx
+    && apt install -y --no-install-recommends gnupg2 iproute2 wget numactl tzdata software-properties-common libntlm0 winbind xvfb xauth python3 libncurses5:i386 libncurses6:i386 libsdl2-2.0-0 libsdl2-2.0-0:i386 tightvncserver x11-xserver-utils xfonts-base debian-keyring debian-archive-keyring apt-transport-https curl nginx supervisor
 
-
-# Install wine staging
-RUN             mkdir -pm755 /etc/apt/keyrings
-RUN             wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-RUN             wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources
-RUN             apt update
-RUN             apt install --install-recommends winehq-stable cabextract wine-binfmt -y
-RUN             apt install -y surf openbox
-RUN             rm -rf /var/lib/apt/lists/*
+# Install Wine staging
+RUN mkdir -pm755 /etc/apt/keyrings \
+    && wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key \
+    && wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources \
+    && apt update \
+    && apt install --install-recommends winehq-stable cabextract wine-binfmt -y \
+    && apt install -y surf openbox \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set up Winetricks
-RUN	            wget -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
+RUN wget -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
     && chmod +x /usr/sbin/winetricks
 
+# Install KasmVNC
+RUN wget https://github.com/kasmtech/KasmVNC/releases/download/v1.3.3/kasmvncserver_bookworm_1.3.3_amd64.deb \
+    && dpkg -i kasmvncserver_bookworm_1.3.3_amd64.deb \
+    && apt-get install -f -y \
+    && rm -f kasmvncserver_bookworm_1.3.3_amd64.deb
 
-ENV         WINEPREFIX=/home/container/.wine
-ENV         WINEDLLOVERRIDES="mscoree,mshtml="
-USER        container
-ENV         USER=container HOME=/home/container
-WORKDIR     /home/container
-
-
+# Set environment variables for Wine and VNC
+ENV WINEPREFIX=/home/container/.wine
+ENV WINEDLLOVERRIDES="mscoree,mshtml="
 ENV DISPLAY=":1"
 
-    
-COPY            ./games/FarmingSimulator25/entrypoint.sh /entrypoint.sh
-CMD             [ "/bin/bash", "/entrypoint.sh" ]
+# Switch to container user
+USER container
+ENV USER=container HOME=/home/container
+WORKDIR /home/container
+
+# Configure Supervisor for KasmVNC
+USER root
+RUN mkdir -p /etc/supervisor/conf.d
+COPY ./supervisor/kasmvnc.conf /etc/supervisor/conf.d/kasmvnc.conf
+
+# Copy entrypoint script
+COPY ./games/FarmingSimulator25/entrypoint.sh /entrypoint.sh
+
+# Set the entrypoint
+CMD [ "/bin/bash", "/entrypoint.sh" ]

@@ -40,14 +40,21 @@ ENV WINEPREFIX=/home/container/.wine
 ENV WINEDLLOVERRIDES="mscoree,mshtml="
 ENV DISPLAY=":1"
 
+# Ensure group and user exist
+RUN groupadd -g 1000 container && useradd -m -u 1000 -g container container
+
+# Set environment variables
+ENV USER=container GROUP=container HOME=/home/container
+
+# Perform permission changes as root
 USER root
-RUN chmod 640 /etc/ssl/private/ssl-cert-snakeoil.key
-RUN chmod 640 /etc/ssl/certs/ssl-cert-snakeoil.pem
-RUN chgrp container /etc/ssl/private/ssl-cert-snakeoil.key
-RUN chgrp container /etc/ssl/certs/ssl-cert-snakeoil.pem
+RUN chmod 640 /etc/ssl/private/ssl-cert-snakeoil.key \
+    && chmod 640 /etc/ssl/certs/ssl-cert-snakeoil.pem \
+    && chgrp container /etc/ssl/private/ssl-cert-snakeoil.key \
+    && chgrp container /etc/ssl/certs/ssl-cert-snakeoil.pem
+
 # Switch to container user
 USER container
-ENV USER=container GROUP=container HOME=/home/container
 WORKDIR /home/container
 
 

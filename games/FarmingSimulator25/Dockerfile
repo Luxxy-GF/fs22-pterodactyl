@@ -10,7 +10,7 @@ RUN useradd -m -d /home/container -s /bin/bash container
 # Install required packages
 RUN dpkg --add-architecture i386 \
     && apt update -y \
-    && apt install -y --no-install-recommends gnupg2 iproute2 wget numactl tzdata software-properties-common libntlm0 winbind xvfb xauth python3 libncurses5:i386 libncurses6:i386 libsdl2-2.0-0 libsdl2-2.0-0:i386 tightvncserver x11-xserver-utils xfonts-base debian-keyring debian-archive-keyring apt-transport-https curl nginx supervisor ssl-cert
+    && apt install -y --no-install-recommends gnupg2 iproute2 wget numactl tzdata software-properties-common libntlm0 winbind xvfb xauth python3 libncurses5:i386 libncurses6:i386 libsdl2-2.0-0 libsdl2-2.0-0:i386 tightvncserver x11-xserver-utils xfonts-base debian-keyring debian-archive-keyring apt-transport-https curl nginx supervisor ssl-cert sudo
 
 # Install Wine staging
 RUN mkdir -pm755 /etc/apt/keyrings \
@@ -49,8 +49,10 @@ WORKDIR /home/container
 USER root
 RUN mkdir -p /etc/supervisor/conf.d
 RUN chmod 716 /etc/ssl/private
-RUN chmod 716 /etc/ssl/private/ssl-cert-snakeoil.key
-RUN chmod 716 /etc/ssl/certs/ssl-cert-snakeoil.pem
+RUN chmod 640 /etc/ssl/private/ssl-cert-snakeoil.key
+RUN chmod 640 /etc/ssl/certs/ssl-cert-snakeoil.pem
+RUN chgrp container /etc/ssl/private/ssl-cert-snakeoil.key
+RUN chgrp container /etc/ssl/certs/ssl-cert-snakeoil.pem
 
 COPY ./games/FarmingSimulator25/supervisor/kasmvnc.conf /etc/supervisor/conf.d/kasmvnc.conf
 

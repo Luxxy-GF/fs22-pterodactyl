@@ -42,22 +42,16 @@ ENV DISPLAY=":1"
 
 # Switch to container user
 USER container
-ENV USER=container HOME=/home/container
+ENV USER=container GROUP=container HOME=/home/container
 WORKDIR /home/container
 
-# Configure Supervisor for KasmVNC
-USER root
-RUN mkdir -p /etc/supervisor/conf.d
 RUN chmod 716 /etc/ssl/private
 RUN chmod 640 /etc/ssl/private/ssl-cert-snakeoil.key
 RUN chmod 640 /etc/ssl/certs/ssl-cert-snakeoil.pem
 RUN chgrp container /etc/ssl/private/ssl-cert-snakeoil.key
 RUN chgrp container /etc/ssl/certs/ssl-cert-snakeoil.pem
-RUN addgroup container container
-RUN chown container:container /etc/ssl/private/ssl-cert-snakeoil.key
-RUN chown container:container /etc/ssl/certs/ssl-cert-snakeoil.pem
 
-COPY ./games/FarmingSimulator25/supervisor/kasmvnc.conf /etc/supervisor/conf.d/kasmvnc.conf
+#COPY ./games/FarmingSimulator25/supervisor/kasmvnc.conf /etc/supervisor/conf.d/kasmvnc.conf
 
 # Copy entrypoint script
 COPY ./games/FarmingSimulator25/entrypoint.sh /entrypoint.sh

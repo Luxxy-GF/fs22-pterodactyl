@@ -26,10 +26,14 @@ RUN wget -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/Winetricks
     && chmod +x /usr/sbin/winetricks
 
 # Install KasmVNC
-RUN wget https://github.com/kasmtech/KasmVNC/releases/download/v1.3.3/kasmvncserver_bookworm_1.3.3_amd64.deb \
+RUN apt-get update && apt-get install -y \
+    wget \
+    ca-certificates \
+    && wget https://github.com/kasmtech/KasmVNC/releases/download/v1.3.3/kasmvncserver_bookworm_1.3.3_amd64.deb \
     && dpkg -i kasmvncserver_bookworm_1.3.3_amd64.deb \
     && apt-get install -f -y \
     && rm -f kasmvncserver_bookworm_1.3.3_amd64.deb
+
 
 # Set environment variables for Wine and VNC
 ENV WINEPREFIX=/home/container/.wine

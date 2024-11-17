@@ -41,7 +41,8 @@ ENV WINEDLLOVERRIDES="mscoree,mshtml="
 ENV DISPLAY=":1"
 
 # Ensure group and user exist
-RUN groupadd -g 1000 container && useradd -m -u 1000 -g container container
+RUN getent group container || groupadd -g 1000 container \
+    && id -u container || useradd -m -u 1000 -g container container
 
 # Set environment variables
 ENV USER=container GROUP=container HOME=/home/container

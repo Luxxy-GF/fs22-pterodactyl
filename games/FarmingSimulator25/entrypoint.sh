@@ -9,12 +9,14 @@ echo "Current timezone: $(cat /etc/timezone)"
 echo "Wine version: $(wine --version)"
 export DISPLAY=":1"
 
+
 # Make internal Docker IP address available to processes
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
 # Define Wine prefix path
 export WINEPREFIX=/home/container/.wine
+export WINEDEBUG=-all
 
 # Ensure Wine prefix directory exists
 echo "Creating Wine prefix directory..."

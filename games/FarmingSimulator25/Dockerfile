@@ -16,7 +16,7 @@ RUN             mkdir -pm755 /etc/apt/keyrings
 RUN             wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
 RUN             wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources
 RUN             apt update
-RUN             apt install --install-recommends winehq-staging cabextract wine-binfmt -y
+RUN             apt install --install-recommends winehq-stable cabextract wine-binfmt -y
 RUN             apt install -y surf openbox
 RUN             rm -rf /var/lib/apt/lists/*
 

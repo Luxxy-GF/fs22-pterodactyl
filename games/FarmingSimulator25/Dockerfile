@@ -40,15 +40,17 @@ ENV WINEPREFIX=/home/container/.wine
 ENV WINEDLLOVERRIDES="mscoree,mshtml="
 ENV DISPLAY=":1"
 
+USER root
+RUN chmod 640 /etc/ssl/private/ssl-cert-snakeoil.key
+RUN chmod 640 /etc/ssl/certs/ssl-cert-snakeoil.pem
+RUN chgrp container /etc/ssl/private/ssl-cert-snakeoil.key
+RUN chgrp container /etc/ssl/certs/ssl-cert-snakeoil.pem
 # Switch to container user
 USER container
 ENV USER=container GROUP=container HOME=/home/container
 WORKDIR /home/container
 
-RUN chmod 640 /etc/ssl/private/ssl-cert-snakeoil.key
-RUN chmod 640 /etc/ssl/certs/ssl-cert-snakeoil.pem
-RUN chgrp container /etc/ssl/private/ssl-cert-snakeoil.key
-RUN chgrp container /etc/ssl/certs/ssl-cert-snakeoil.pem
+
 
 #COPY ./games/FarmingSimulator25/supervisor/kasmvnc.conf /etc/supervisor/conf.d/kasmvnc.conf
 

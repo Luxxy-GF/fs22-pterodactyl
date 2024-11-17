@@ -48,6 +48,7 @@ WORKDIR /home/container
 # Configure Supervisor for KasmVNC
 USER root
 RUN mkdir -p /etc/supervisor/conf.d
+RUN chmod 716 /etc/ssl/private
 COPY ./games/FarmingSimulator25/supervisor/kasmvnc.conf /etc/supervisor/conf.d/kasmvnc.conf
 
 # Copy entrypoint script

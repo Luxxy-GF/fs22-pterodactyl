@@ -40,7 +40,7 @@ fi
 
 # Start KasmVNC server
 echo "Starting KasmVNC server..."
-/usr/bin/kasmvncserver --geometry 1920x1080 --port ${VNC_PORT} --password ${VNC_PASS} &
+echo "2" | /usr/bin/kasmvncserver --geometry 1920x1080 --port ${VNC_PORT} --password ${VNC_PASS}
 KASMVNC_PID=$!
 
 # Check if FS_VERSION is not 22 or 25

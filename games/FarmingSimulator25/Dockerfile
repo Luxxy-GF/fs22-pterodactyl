@@ -10,13 +10,7 @@ RUN useradd -m -d /home/container -s /bin/bash container
 # Install required packages
 RUN dpkg --add-architecture i386 \
     && apt update -y \
-    && apt install -y --no-install-recommends \
-        gnupg2 iproute2 wget numactl tzdata software-properties-common \
-        libntlm0 winbind xvfb xauth python3 libncurses5:i386 libncurses6:i386 \
-        libsdl2-2.0-0 libsdl2-2.0-0:i386 tightvncserver x11-xserver-utils \
-        xfonts-base debian-keyring debian-archive-keyring apt-transport-https \
-        curl nginx i3 i3status dmenu xterm dbus \
-    && rm -rf /var/lib/apt/lists/*
+    && apt install -y --no-install-recommends gnupg2 iproute2 wget numactl tzdata software-properties-common libntlm0 winbind xvfb xauth python3 libncurses5:i386 libncurses6:i386 libsdl2-2.0-0 libsdl2-2.0-0:i386 tightvncserver x11-xserver-utils xfonts-base debian-keyring debian-archive-keyring apt-transport-https curl nginx
 
 # Install Wine staging
 RUN mkdir -pm755 /etc/apt/keyrings \
@@ -44,23 +38,10 @@ ENV WINEPREFIX=/home/container/.wine
 ENV WINEDLLOVERRIDES="mscoree,mshtml="
 ENV DISPLAY=":1"
 
-# Configure VNC
-RUN mkdir -p /home/container/.vnc \
-    && echo '#!/bin/bash\n' \
-            'xrdb $HOME/.Xresources\n' \
-            'startx /usr/bin/i3 &' \
-        > /home/container/.vnc/xstartup \
-    && chmod +x /home/container/.vnc/xstartup
-
 # Switch to container user
 USER container
 ENV USER=container HOME=/home/container
 WORKDIR /home/container
-
-# Install i3 configuration
-RUN mkdir -p /home/container/.config/i3 \
-    && echo 'exec --no-startup-id i3status' > /home/container/.config/i3/config \
-    && echo 'exec xterm' >> /home/container/.config/i3/config
 
 COPY ./games/FarmingSimulator25/entrypoint.sh /entrypoint.sh
 
